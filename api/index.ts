@@ -2,8 +2,8 @@ import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 import { cors } from 'hono/cors'
 import { Preference, Payment } from 'mercadopago'
-import { mp } from '../lib/mp'
-import { supabase } from '../lib/supabase'
+import { mp } from '../lib/mp.js'
+import { supabase } from '../lib/supabase.js'
 
 export const config = { runtime: 'nodejs' }
 
