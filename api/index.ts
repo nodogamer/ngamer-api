@@ -55,7 +55,7 @@ app.post('/payments/create-preference', async (c) => {
       payer: { email },
       back_urls: {
         success: `${process.env.LANDING_URL}/gracias`,
-        failure: `${process.env.LANDING_URL}/planes`,
+        failure: `${process.env.LANDING_URL}/#planes`,
         pending: `${process.env.LANDING_URL}/gracias`,
       },
       auto_return: 'approved',
