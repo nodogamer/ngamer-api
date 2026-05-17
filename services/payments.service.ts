@@ -1,7 +1,7 @@
 import { MP_API, mpHeaders } from '../lib/mp.js'
 import { createOrder, updateOrderPreference, updateOrderPayment } from '../repositories/orders.repository.js'
-import { PLANS } from '../types/index.js'
-import type { OrderStatus, PlanId } from '../types/index.js'
+import { getPlan } from '../repositories/plans.repository.js'
+import type { OrderStatus } from '../types/index.js'
 
 interface MpPreferenceResponse {
   id: string
@@ -13,11 +13,10 @@ interface MpPaymentResponse {
   external_reference: string
 }
 
-export async function createPreference(email: string, plan: PlanId) {
-  const planData = PLANS[plan]
-  if (!planData) throw new Error('Plan inválido')
+export async function createPreference(email: string, planId: number) {
+  const plan = await getPlan(planId)
 
-  const orderId = await createOrder(email, plan, planData.amount)
+  const orderId = await createOrder(email, planId, plan.amount)
 
   const res = await fetch(`${MP_API}/checkout/preferences`, {
     method: 'POST',
@@ -25,10 +24,10 @@ export async function createPreference(email: string, plan: PlanId) {
     body: JSON.stringify({
       external_reference: orderId,
       items: [{
-        id: plan,
-        title: `NodoGamer — Plan ${planData.label}`,
+        id: String(planId),
+        title: `NodoGamer — Plan ${plan.label}`,
         quantity: 1,
-        unit_price: planData.amount,
+        unit_price: plan.amount,
         currency_id: 'ARS',
       }],
       payer: { email },

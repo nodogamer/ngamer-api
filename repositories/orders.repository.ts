@@ -1,10 +1,10 @@
 import { supabase } from '../lib/supabase.js'
-import type { OrderStatus, PlanId } from '../types/index.js'
+import type { OrderStatus } from '../types/index.js'
 
-export async function createOrder(email: string, plan: PlanId, amount_ars: number) {
+export async function createOrder(email: string, plan_id: number, amount_ars: number) {
   const { data, error } = await supabase
     .from('orders')
-    .insert({ email, plan, amount_ars, status: 'pending' })
+    .insert({ email, plan_id, amount_ars, status: 'pending' })
     .select('id')
     .single()
 

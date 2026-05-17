@@ -1,14 +1,14 @@
 import type { Context } from 'hono'
 import { createPreference, confirmPayment } from '../services/payments.service.js'
-import type { PlanId } from '../types/index.js'
 
 export async function handleCreatePreference(c: Context) {
-  const { email, plan } = await c.req.json<{ email: string; plan: PlanId }>()
+  const { email, plan } = await c.req.json<{ email: string; plan: number }>()
+  const planId = Number(plan)
 
-  if (!email || !plan) return c.json({ error: 'Email y plan son requeridos' }, 400)
+  if (!email || !planId) return c.json({ error: 'Email y plan son requeridos' }, 400)
 
   try {
-    const init_point = await createPreference(email, plan)
+    const init_point = await createPreference(email, planId)
     return c.json({ init_point })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Error interno'

@@ -3,6 +3,7 @@ import { handle } from 'hono/vercel'
 import { cors } from 'hono/cors'
 import payments from '../routes/payments.js'
 import webhooks from '../routes/webhooks.js'
+import plans from '../routes/plans.js'
 
 export const config = { runtime: 'edge' }
 
@@ -17,5 +18,6 @@ app.use('*', cors({
 app.get('/health', (c) => c.json({ status: 'ok' }))
 app.route('/payments', payments)
 app.route('/webhooks', webhooks)
+app.route('/plans', plans)
 
 export default handle(app)
