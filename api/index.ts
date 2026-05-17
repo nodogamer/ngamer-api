@@ -5,7 +5,7 @@ import { Preference, Payment } from 'mercadopago'
 import { mp } from '../lib/mp.js'
 import { supabase } from '../lib/supabase.js'
 
-export const config = { runtime: 'nodejs' }
+export const config = { runtime: 'edge' }
 
 const PLANS: Record<string, { label: string; amount: number }> = {
   'bloque-de-tierra': { label: 'Bloque de Tierra', amount: 5000 },
