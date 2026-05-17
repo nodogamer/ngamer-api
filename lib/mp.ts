@@ -1,7 +1,8 @@
-import { MercadoPagoConfig } from 'mercadopago'
+export const MP_API = 'https://api.mercadopago.com'
 
-export function getMpClient() {
-  const token = process.env.MP_ACCESS_TOKEN
-  if (!token) throw new Error('MP_ACCESS_TOKEN no configurado')
-  return new MercadoPagoConfig({ accessToken: token })
+export function mpHeaders(): HeadersInit {
+  return {
+    'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+    'Content-Type': 'application/json',
+  }
 }
