@@ -54,9 +54,9 @@ app.post('/payments/create-preference', async (c) => {
       }],
       payer: { email },
       back_urls: {
-        success: `${process.env.LANDING_URL}/gracias`,
+        success: `${process.env.LANDING_URL}/gracias?order_id=${order.id}`,
         failure: `${process.env.LANDING_URL}/#planes`,
-        pending: `${process.env.LANDING_URL}/gracias`,
+        pending: `${process.env.LANDING_URL}/gracias?order_id=${order.id}`,
       },
       auto_return: 'approved',
       notification_url: `${process.env.API_URL}/api/webhooks/mercadopago`,
@@ -77,6 +77,27 @@ app.post('/payments/create-preference', async (c) => {
     .eq('id', order.id)
 
   return c.json({ init_point })
+})
+
+app.post('/payments/confirm', async (c) => {
+  const { payment_id, order_id } = await c.req.json<{ payment_id: string; order_id: string }>()
+
+  const payRes = await fetch(`${MP_API}/v1/payments/${payment_id}`, {
+    headers: { 'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}` },
+  })
+
+  if (!payRes.ok) return c.json({ error: 'No se pudo verificar el pago' }, 400)
+
+  const payment = await payRes.json() as { status: string; external_reference: string }
+
+  if (payment.external_reference !== order_id) return c.json({ error: 'Referencia inválida' }, 400)
+
+  await supabase
+    .from('orders')
+    .update({ status: payment.status, mp_payment_id: payment_id })
+    .eq('id', order_id)
+
+  return c.json({ status: payment.status })
 })
 
 app.post('/webhooks/mercadopago', async (c) => {
