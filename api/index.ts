@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 import { cors } from 'hono/cors'
 import { Preference, Payment } from 'mercadopago'
-import { mp } from '../lib/mp.js'
+import { getMpClient } from '../lib/mp.js'
 import { supabase } from '../lib/supabase.js'
 
 export const config = { runtime: 'edge' }
@@ -38,7 +38,7 @@ app.post('/payments/create-preference', async (c) => {
 
   if (error) return c.json({ error: 'Error al crear la orden' }, 500)
 
-  const preference = new Preference(mp)
+  const preference = new Preference(getMpClient())
   const result = await preference.create({
     body: {
       external_reference: order.id,
@@ -94,7 +94,7 @@ app.post('/webhooks/mercadopago', async (c) => {
 
   if (body.type !== 'payment') return c.json({ ok: true })
 
-  const payment = new Payment(mp)
+  const payment = new Payment(getMpClient())
   const paymentData = await payment.get({ id: body.data.id })
 
   if (!paymentData.external_reference) return c.json({ ok: true })

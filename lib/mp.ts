@@ -1,5 +1,7 @@
 import { MercadoPagoConfig } from 'mercadopago'
 
-export const mp = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-})
+export function getMpClient() {
+  const token = process.env.MP_ACCESS_TOKEN
+  if (!token) throw new Error('MP_ACCESS_TOKEN no configurado')
+  return new MercadoPagoConfig({ accessToken: token })
+}
