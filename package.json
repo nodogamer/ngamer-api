@@ -6,7 +6,9 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.9",
-    "hono": "^4.12.19"
+    "@supabase/supabase-js": "^2.105.4",
+    "hono": "^4.12.19",
+    "mercadopago": "^2.12.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
