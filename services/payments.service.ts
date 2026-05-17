@@ -34,7 +34,7 @@ export async function createPreference(email: string, plan: PlanId) {
       payer: { email },
       back_urls: {
         success: `${process.env.LANDING_URL}/gracias?order_id=${orderId}`,
-        failure: `${process.env.LANDING_URL}/#planes`,
+        failure: `${process.env.LANDING_URL}/cancelado`,
         pending: `${process.env.LANDING_URL}/gracias?order_id=${orderId}`,
       },
       auto_return: 'approved',
