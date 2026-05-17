@@ -15,7 +15,11 @@ const PLANS: Record<string, { label: string; amount: number }> = {
 
 const app = new Hono().basePath('/api')
 
-app.use('*', cors({ origin: process.env.LANDING_URL ?? '*' }))
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? '').split(',').map(o => o.trim())
+
+app.use('*', cors({
+  origin: (origin) => allowedOrigins.includes(origin) ? origin : allowedOrigins[0],
+}))
 
 app.get('/health', (c) => c.json({ status: 'ok' }))
 
