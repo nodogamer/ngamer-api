@@ -13,10 +13,11 @@ interface MpPaymentResponse {
   external_reference: string
 }
 
-export async function createPreference(email: string, planId: number) {
+export async function createPreference(email: string, planId: number, annual: boolean) {
   const plan = await getPlan(planId)
+  const amount = annual && plan.amount_annual ? plan.amount_annual : plan.amount
 
-  const orderId = await createOrder(email, planId, plan.amount)
+  const orderId = await createOrder(email, planId, amount)
 
   const res = await fetch(`${MP_API}/checkout/preferences`, {
     method: 'POST',
@@ -27,7 +28,7 @@ export async function createPreference(email: string, planId: number) {
         id: String(planId),
         title: `NodoGamer — Plan ${plan.label}`,
         quantity: 1,
-        unit_price: plan.amount,
+        unit_price: amount,
         currency_id: 'ARS',
       }],
       payer: { email },
