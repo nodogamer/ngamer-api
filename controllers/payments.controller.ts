@@ -1,14 +1,17 @@
 import type { Context } from 'hono'
 import { createPreference, confirmPayment } from '../services/payments.service.js'
+import type { User } from '@supabase/supabase-js'
 
 export async function handleCreatePreference(c: Context) {
-  const { email, plan, annual } = await c.req.json<{ email: string; plan: number; annual?: boolean }>()
+  const user = c.get('user') as User
+  const { plan, annual } = await c.req.json<{ plan: number; annual?: boolean }>()
   const planId = Number(plan)
 
-  if (!email || !planId) return c.json({ error: 'Email y plan son requeridos' }, 400)
+  if (!planId) return c.json({ error: 'Plan requerido' }, 400)
+  if (!user.email) return c.json({ error: 'El usuario no tiene email asociado' }, 400)
 
   try {
-    const init_point = await createPreference(email, planId, annual ?? false)
+    const init_point = await createPreference(user.email, user.id, planId, annual ?? false)
     return c.json({ init_point })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Error interno'

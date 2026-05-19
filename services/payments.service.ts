@@ -13,11 +13,11 @@ interface MpPaymentResponse {
   external_reference: string
 }
 
-export async function createPreference(email: string, planId: number, annual: boolean) {
+export async function createPreference(email: string, userId: string, planId: number, annual: boolean) {
   const plan = await getPlan(planId)
   const amount = annual && plan.amount_annual ? plan.amount_annual : plan.amount
 
-  const orderId = await createOrder(email, planId, amount)
+  const orderId = await createOrder(email, userId, planId, amount)
 
   const res = await fetch(`${MP_API}/checkout/preferences`, {
     method: 'POST',
