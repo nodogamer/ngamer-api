@@ -1,9 +1,8 @@
 import type { Context } from 'hono'
 import { createPreference, confirmPayment } from '../services/payments.service.js'
-import type { User } from '@supabase/supabase-js'
 
 export async function handleCreatePreference(c: Context) {
-  const user = c.get('user') as User
+  const user = c.get('user')
   const { plan, annual } = await c.req.json<{ plan: number; annual?: boolean }>()
   const planId = Number(plan)
 
