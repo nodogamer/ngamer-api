@@ -50,7 +50,7 @@ export async function createPreference(email: string, userId: string, planId: nu
 
   const { id: mp_preference_id, init_point } = await res.json() as MpPreferenceResponse
 
-  await updateOrderPreference(orderId, mp_preference_id)
+  await updateOrderPreference(orderId, mp_preference_id, init_point)
 
   return init_point
 }

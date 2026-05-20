@@ -4,7 +4,7 @@ import type { OrderStatus } from '../types/index.js'
 export async function getOrdersByUserId(user_id: string) {
   const { data, error } = await supabase
     .from('orders')
-    .select('id, amount_ars, status, created_at, plans(label)')
+    .select('id, amount_ars, status, created_at, mp_init_point, plans(label)')
     .eq('user_id', user_id)
     .order('created_at', { ascending: false })
 
@@ -23,10 +23,10 @@ export async function createOrder(email: string, user_id: string, plan_id: numbe
   return data.id as string
 }
 
-export async function updateOrderPreference(id: string, mp_preference_id: string) {
+export async function updateOrderPreference(id: string, mp_preference_id: string, mp_init_point: string) {
   const { error } = await supabase
     .from('orders')
-    .update({ mp_preference_id })
+    .update({ mp_preference_id, mp_init_point })
     .eq('id', id)
 
   if (error) throw new Error(`Error actualizando preferencia: ${error.message}`)
