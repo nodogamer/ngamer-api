@@ -4,6 +4,7 @@ import { cors } from 'hono/cors'
 import payments from '../routes/payments.js'
 import webhooks from '../routes/webhooks.js'
 import plans from '../routes/plans.js'
+import orders from '../routes/orders.js'
 
 export const config = { runtime: 'edge' }
 
@@ -19,5 +20,6 @@ app.get('/health', (c) => c.json({ status: 'ok' }))
 app.route('/payments', payments)
 app.route('/webhooks', webhooks)
 app.route('/plans', plans)
+app.route('/orders', orders)
 
 export default handle(app)

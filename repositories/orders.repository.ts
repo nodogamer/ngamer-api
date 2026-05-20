@@ -1,6 +1,17 @@
 import { supabase } from '../lib/supabase.js'
 import type { OrderStatus } from '../types/index.js'
 
+export async function getOrdersByUserId(user_id: string) {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('id, amount_ars, status, created_at, plans(label)')
+    .eq('user_id', user_id)
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(`Error obteniendo pedidos: ${error.message}`)
+  return data
+}
+
 export async function createOrder(email: string, user_id: string, plan_id: number, amount_ars: number) {
   const { data, error } = await supabase
     .from('orders')
